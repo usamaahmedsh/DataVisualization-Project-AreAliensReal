@@ -1,0 +1,354 @@
+---
+title: "Unveiling the Mystery:"
+subtitle: " Exploring Patterns and Associations in UFO Sightings Data"
+author: "Agastya Deshraju, Usama Ahmed, Naitik Shah, Gorantla Sai Laasya, Divya Dhole, Lakshmi Anchula"
+format: html
+editor: visual
+---
+
+```{r}
+#| label: load-packages
+#| include: false
+# Load packages here
+pacman::p_load(tidymodels,
+               tidyverse,
+               gganimate,
+               dplyr,
+               kableExtra,
+               sf, 
+               leaflet, 
+               ggmap,
+               maps,
+               lubridate,
+               data.table,
+               gganimate,
+               ggimage,
+               png,
+               here,
+               grid,
+               plotly)
+
+```
+
+```{r}
+#| label: setup
+#| include: false
+# Plot theme
+ggplot2::theme_set(ggplot2::theme_minimal(base_size = 11))
+
+# For better figure resolution
+knitr::opts_chunk$set(
+  fig.retina = 3, 
+  dpi = 300, 
+  fig.width = 6, 
+  fig.asp = 0.618 
+  )
+
+```
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+#| label: load-data
+#| include: false
+
+ufo_sightings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-06-20/ufo_sightings.csv')
+places <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-06-20/places.csv')
+day_parts_map <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-06-20/day_parts_map.csv')
+
+
+```
+
+## Abstract
+
+With our project we are embarking on a quest to unearth whether UFO sightings are real. This is done by answering two questions that we believe are key at proving if past UFO sightings are valid or not. First, we look into the geographic distribution of the sightings. This is done by finding the concentrations of the sightings all around the world. Then, we consider the shapes of the reported sightings, aiming to find whether certain shapes are sighted more than the others. Our second question deals with analyzing seasonal as well as daily patterns in these sightings.
+
+## Introduction
+
+Unidentified Flying Objects (UFO) have taken over popular media over the past few years. But the fascination with finding extraterrestrial life has been something that humans have been interested in for as long as we can remember. Reported sightings from decades ago have been recorded and compiled with new sightings under a singular dataset by TidyTuesday ([Link to the TidyTuesday dataset](https://github.com/rfordatascience/tidytuesday/tree/master/data/2023/2023-06-20)). The dataset provides a comprehensive compilation of UFO sightings from all over the world. The data comes from the National UFO Reporting Center, cleaned and enriched with data from sunrise-sunset.org by Jon Harmo.
+
+## Question-1: What is the geographic distribution of UFO sightings? Are there any hotspots where the number of sightings is prevalent? Is there any correlation between the location of the sighting and the shape of the UFO?
+
+### Introduction
+
+For the first question, we wanted to visualize the geographic distribution of the sightings across the world. UFOs are reportedly sighted all over the world, and this has fascinated researchers with the possibility of finding any patterns or correlations to these sightings.
+
+In the second part of this question, we analyze the different shapes that were observed when these sightings were reported. We believe that if there were more reported sightings of a certain shape, there is a likelihood that these shapes could possibly correlate to a UFO sighting.
+
+### Approach
+
+#### i. Heat-map distribution of UFO sightings across the World
+
+Our first step with tackling this problem is to input all the datasets, which is done using the `read.csv` function of R. From there we select the columns that we need from the `places.csv` file, which are - `state`, `country`, `latitude`, `longitude`. The countries are then grouped to find the number of sightings in each one of them, then using the `maps` package, we form a dataset that can be used to plot the outline of the world map. The countries from our UFO sightings dataset is then left joined onto the `world_map` dataset. Then, the count of these sightings are grouped into various ranges and these ranges are mapped to a certain shade of blue. Then, using `geom_polygon` the plot is formed with the colors shading the countries based on the density of the UFO sightings there.
+
+```{r, fig.width=10, fig.asp=0.7,fig.align='center'}
+#| warning: FALSE
+#| code-fold: true  
+  places_location_data <- places |>
+  select(state, country, latitude, longitude)
+  
+  places_location_data <- places_location_data %>%
+  group_by(country) %>%  summarise(sighting_count = n()) %>%  ungroup()
+
+
+
+world_map <- map_data("world")
+colnames(world_map)[5] <- "country"
+
+
+places_location_data$country <- tolower(places_location_data$country)
+world_map$country <- tolower(world_map$country)
+
+
+heatmap_data <- left_join(world_map, places_location_data, by = "country")
+
+setDT(heatmap_data)
+
+heatmap_data[is.na(sighting_count), sighting_count := 0]
+
+heatmap_data[, sighting_count_range := case_when(sighting_count == 0 ~ "<1",
+                                                 sighting_count < 30 ~ "1-29",
+                                                 sighting_count < 60 ~ "30-59",
+                                                 sighting_count < 150 ~ "60-149",
+                                                 sighting_count < 200 ~ "150-299",
+                                                 sighting_count < 1000 ~ "300-999",
+                                                 sighting_count > 1000 ~ "1000+",
+                                                 TRUE ~ "-1")]
+heatmap_data$sighting_count_range <- factor(heatmap_data$sighting_count_range,
+                                            levels = c("<1","1-29","30-59","60-149","150-299","300-999","1000+"))
+
+
+
+color_scale_values = c("<1" = "#D8FAFD", 
+                       "1-29" = "#8FFAFD", 
+                       "30-59" = "#0CFDF3", 
+                       "60-149" = "#3282F6", 
+                       "150-299" = "#0023F5", 
+                       "300-999" = "#00129A", 
+                       "1000+" = "#000C7B")
+
+ggplot() + 
+  geom_polygon(data = world_map, aes(x = long, y = lat, group = group), fill = "white", color = "black") +
+  geom_polygon(data = heatmap_data, aes(x = long, y = lat, group = group, fill = sighting_count_range), color = "black") +
+  theme_minimal() +
+  scale_fill_manual(values =  color_scale_values) +
+  coord_fixed(1.3)+
+  xlab("Longitude") +
+  ylab("Latitude") +
+  labs(fill = "Number of sightings by country")
+```
+
+#### ii. UFO Sighting Distribution Around the World
+
+From the above plot we can find out that the United States has the highest density of UFO sightings in the world. Therefore, we decided to zone-in on the US and find the exact locations where these sightings were observed. This was done using the `latitude` and `longitude` data available in the `places` table. An interactive map was plotted using `leaflet` which allowed us to zoom in on the various locations where the sightings were observed. Circular green markers were added to indicate these locations with the attribute of `leaflet` called, `addCircleMarkers`.
+
+```{r, fig.align='center'}
+#| code-fold: true
+us_places_data <- places |>
+  select(state, country, country_code, latitude, longitude)
+us_places_data <- us_places_data |>
+  filter(!is.na(latitude) & !is.na(longitude))
+us_places_data <- us_places_data |>
+  filter(country_code == "US")
+
+map_plot <- leaflet(data = us_places_data) |>
+  addTiles() |>
+  setView(
+    lng = -115,   
+    lat = 37,      
+    zoom = 3      
+  )
+
+map_plot <- map_plot |>
+  addCircleMarkers(lat = ~latitude, lng = ~longitude, color = "#51EE00", stroke = FALSE, fillOpacity = 0.8)
+
+map_plot
+```
+
+#### iii. Variance of Shape Sightings
+
+The first step in plotting the variance in the shapes, involved cleaning the dataset. We first filtered out all shapes that were reported as `other` or `unknown` as we believe plotting these categories wouldn't be of any use. Then, we filtered out all the shapes, where the total number of reported sightings were less than 1500. We believe these to be negligent compared to the other sightings and could therefore be eliminated. After that, we find the count of each shape and then, a circular bar plot is plotted using `ggplot` and `geom_bar`.
+
+```{r fig.width=13,fig.height=9,fig.align='center', warning=FALSE}
+#| code-fold: true
+shapes_filtered <- ufo_sightings |>
+  select(city, state, country_code, shape) |>
+  filter(shape != "other" & shape != "unknown")
+
+
+shapes_filtered <- shapes_filtered |>
+  group_by(shape) |>
+  filter(dplyr::n() > 1500) |>
+  ungroup()
+
+shape_counts <- shapes_filtered |>
+  count(shape)
+
+
+ggplot(shape_counts, aes(x = n, y = shape)) +
+  geom_bar(stat = "identity", fill=alpha("#0023F5", 0.5)) +
+  xlim(-2000, 19000) +
+  coord_polar(theta = "y") +
+  theme_minimal() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.title.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.text.x = element_text(size = 15))
+```
+
+### Analysis
+
+From the first plot we can find out the countries where the number of sightings were higher, indicated by the darker shades of blue versus, countries where the number of sightings were lower, indicated by the lighter shades of blue. We notice that countries where the population is higher or where the infrastructure supports these reportings are shaded darker in color, for example the US, Canada, Australia, India and other countries in Europe. Noticing this, we chose to focus on the United States.
+
+In the second plot, we zoned in on the US. We plotted all the individual sightings in the country, and noticed a trend in the data. The sightings are concentrated around the bigger cities, particularly Los Angeles. We all know the city to be the center of Hollywood, we believe that this might play a part in the higher concentration of sightings over there. The influence of sci-fi movies might push the agenda of reported sightings, and although we can not prove whether Hollywood has anything to do with the concentration in UFO sightings in California, it is something that we need to consider as a possibility in the vast number of sightings in the area.
+
+For the third plot, we can clearly see that people have reported a "light" as the shape of their sighting the most. After that, triangle, circle and fireball take preference. With so many people reporting similar shapes, we need to take into consideration that there is a reasoning behind this. We don't usually see triangular or circular objects floating in the sky and the fact that there were multiple people reporting them indicates that there might have been some proof behind it.
+
+```{r, dev='ragg_png', fig.width=10,fig.height=6.5,fig.align='center', warning = FALSE, message=FALSE}
+#| code-fold: true
+
+# Time-series plot by season (Usama)
+
+ufo_sightings <- left_join(ufo_sightings, places, by = c("city", 
+                                                         "state",
+                                                         "country_code"))
+
+ufo_sightings <- ufo_sightings |> 
+  filter(!is.na(shape) & shape != "other" & shape != "unknown")
+
+ufo_sightings$decade <- as.integer(format(ufo_sightings$reported_date_time_utc, "%Y")) - as.integer(format(ufo_sightings$reported_date_time_utc, "%Y")) %% 10
+
+ufo_sightings$reported_date <- as.Date(ufo_sightings$reported_date_time, format="%Y-%m-%dT%H:%M:%SZ")
+
+get_season <- function(date) {
+  year <- format(date, "%Y")
+  start_spring <- as.Date(paste(year, "-03-21", sep=""))
+  start_summer <- as.Date(paste(year, "-06-21", sep=""))
+  start_autumn <- as.Date(paste(year, "-09-23", sep=""))
+  start_winter <- as.Date(paste(year, "-12-21", sep=""))
+  
+  if (date >= start_spring & date < start_summer) {
+    return('spring')
+  } else if (date >= start_summer & date < start_autumn) {
+    return('summer')
+  } else if (date >= start_autumn & date < start_winter) {
+    return('autumn')
+  } else {
+    return('winter')
+  }
+}
+
+ufo_sightings$season <- sapply(ufo_sightings$reported_date, get_season)
+
+ufo_sightings$season_emoji <- case_when(
+      ufo_sightings$season == "winter" ~ "❄️",
+      ufo_sightings$season == "spring" ~ "⛅️️",
+      ufo_sightings$season == "summer" ~ "☀️",
+      ufo_sightings$season == "autumn"   ~ "☂️",
+      TRUE ~ "Null")
+
+grouped_data <- ufo_sightings |>
+  group_by(decade,season,season_emoji) |>
+  summarise(sightings = n())
+
+image <- readPNG(here("images","ufo_background_image.png"))
+
+
+ggplot(grouped_data, aes(x=decade, y=sightings, color=season)) +
+  annotation_custom(rasterGrob(image),
+                    xmin=-Inf,
+                    xmax=Inf,
+                    ymin=-Inf,
+                    ymax=Inf) +
+  geom_line(linewidth = 0.8) +
+  geom_text(aes(label = season_emoji)) +
+  scale_y_continuous(breaks = seq(0,14000,2000)) +
+  scale_x_continuous(breaks = seq(1920,2020,10)) +
+  theme_minimal() +
+  labs(title="UFO sightings by season over years",
+       x="Decade",
+       y="Number of Sightings",
+       subtitle = "Sightings by each decade from 1920 till 2020",
+       color = "Season") +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        plot.title.position = "plot",
+        legend.position = "none",
+        panel.grid.minor.y = element_blank(),
+        panel.grid.major.y = element_line(color = "black",
+                                          linewidth = 0.5,
+                                          linetype = "dotted"),
+        panel.background = element_blank(), 
+        panel.ontop = TRUE) 
+```
+
+## Question-2: Are there any patterns to the sightings concerning seasons? Do astronomical events affect the reported sightings?
+
+#### Introduction
+
+For the second question, we aimed to analyze any prevalent historical trends in the UFO sightings and justify the occurrence of those trends, if any. We divided this question into two segments. For the first segment, we wanted to visualize any historical trends in the number of UFO sightings and for the second segment, we adopted a more granular approach and visualized the number of sightings by different parts of the day i.e. dusk, dawn etc. Finally, we correlated our visualizations with any other historical trends that occurred during the same time-frame.
+
+#### Approach
+
+**i. Time-series Visualization of UFO Sightings**
+
+To adopt a more generalized approach, we wanted to convert the data into decades from years. To this end, we joined the UFO sightings data with places by `city`, `state`, and `country_code`. We then filtered the sightings by shape, removing any NULL or undefined values. Afterwards, we mutated the seasons column and then summarized the sightings count by decade and season. Finally, we plotted the data using geom_line and added a few aesthetics to make the plot look more pleasing.
+
+#### Code
+
+```{r,  fig.width=10,fig.height=6.5,fig.align='center'}
+#| code-fold: true
+
+# Ufo sightings by part of the day (Naitik)
+
+setDT(ufo_sightings)
+df <- ufo_sightings[, .(sightings = .N), day_part]
+View(df)
+
+df <- na.omit(df) # Omiting the NA values from the df
+
+df$day_part <- gsub("night","Night",df$day_part)
+df$day_part <- gsub("nautical dusk","Nautical Dusk",df$day_part)
+df$day_part <- gsub("afternoon","Afternoon",df$day_part)
+df$day_part <- gsub("morning","Morning",df$day_part)
+df$day_part <- gsub("astronomical dusk","Astronomical Dusk",df$day_part)
+df$day_part <- gsub("civil dusk","Civil Dusk",df$day_part)
+df$day_part <- gsub("civil dawn","Civil Dawn",df$day_part)
+df$day_part <- gsub("nautical dawn","Nautical Dawn",df$day_part)
+df$day_part <- gsub("astronomical dawn","Astronomical Dawn",df$day_part)
+
+
+ggplot(df, aes(x=reorder(day_part, sightings), y=sightings, fill=day_part)) +
+  geom_bar(stat="identity") +
+  coord_flip() +
+  labs(title="UFO Sightings by Part of the Day",
+       x="Part of the Day",
+       y="Number of Sightings") +
+  theme_minimal() +
+  theme(legend.position="none",
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank(),
+    )
+
+```
+
+**ii. UFO Sightings by part of the day:**
+
+Using the joined dataset from last part, we calculated the number of sightings by astronomical events by `day_part` column. By this point, most of the data was already pre-processed therefore we only removed any missing or NA values from the day_part column. Afterwards, we standardized the naming convention and used `geom_bar` to make a histogram of count against astronomical events.
+
+### Analysis
+
+For the first plot, we saw some intriguing trends. The sighting up until 1980 remained less than 1000. Post 1990, the number of sightings started to increase and reached its peak in 2010. At this moment, we cannot draw any conclusions for the most recent decade (2020) because we do not have 7 years worth of data (2024 till 2030) and the data has not matured yet. By seasons, we saw that most number of sightings took place during summers.
+
+There can be several reasons for this trend like improved technology for sightings, a population boost hence increasing the number of sightings per capita etc but we shortlisted the inclusion of internet into the picture as the most important one. With internet, UFOs and alien life has become one of the most debated topics across the world and people are more likely to share their experiences and sightings online, leading to a heightened awareness and reporting of UFO sightings. Additionally, the internet also provides a platform for the dissemination of information and the formation of online communities like Reddit groups dedicated to discussing UFO phenomena, further amplifying interest and contributing to the observed increase in reported sightings.
+
+For maximum sightings during summer, the season's extended daylight, clearer skies, and heightened outdoor activity contribute to its status as a prime season for UFO sightings, forecasting increased attention and reporting of aerial phenomenon during this time.
+
+For the second plot, we saw that most number of UFO sightings (\> 80%) took place during night time, while the least number of UFO sightings took place during civil dawn.
+
+Several reasons can be attributed to this phenomenon. Nighttime offers ideal conditions for observing celestial phenomenon, with reduced ambient light and and decreased human activity allowing for clearer visibility of the sky. Moreover, the darkness of night often evokes a sense mystery and intrigue, prompting individuals to be more vigilant.
+
+## Final Thoughts
+
+Karl Sagan once tried to address the question of whether aliens exist in terms of probability. He explained that given the infinitely many exoplanets in our universe, the mathematical probability of alien life existing on at least one of those planets is not 0. However,despite this mathematical possibility, the question of whether aliens exist remains unanswered due to the lack of conclusive evidence in our analysis. For every observed trend, there exists a possible explanation.
+
+Ongoing scientific research and exploration, including the search for microbial life on other planets, continues to fuel speculation and curiosity surrounding the existence of aliens. Ultimately, the question remains one of the most intriguing and unresolved mysteries in science.

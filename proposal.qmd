@@ -1,0 +1,257 @@
+---
+title: "Unveiling the Mystery: Exploring Patterns and Associations in UFO Sightings Data"
+subtitle: "Proposal"
+format: html
+editor: visual
+---
+
+## Introduction
+
+**Description of the dataset**
+
+The UFO Sightings Redux data comes from the National UFO Reporting Center, cleaned and enriched with data from sunrise-sunset.org by Jon Harmo.
+
+The collection of verified UFO sightings from multiple sources is compiled into a comprehensive list called TidyTuesday UFO sightings. The location (latitude and longitude), the time and date of the sighting, the shape of the purported UFO, the duration of the sighting, and any other comments or descriptions provided by witnesses are typically included in this data-set.
+
+There are 3 CSV files in the data-set:
+
+-   `ufo_sightings.csv`: It has 12 variables such as city, state, country_code, and shape. In total 96,429 rows.
+
+-   `places.csv`: It has 10 variables such as longitude, latitude and time zone, country_code, and alternate_city_names. There are 14,417 rows.
+
+-   `day_parts_map.csv`: It has 12 variables such as sunrise, sunset, civil_twilight_end, nautical_twilight_end, and astronomical_twilight_end. It’s of 26,409 rows.
+
+## Dataset
+
+```{r}
+#| label: load-dataset
+#| message: false
+#| warning: false
+#| output: false
+#| code-fold: true
+
+
+# Get the Data
+# Reading the data manually
+
+options(repos = c(CRAN = "https://cloud.r-project.org/"))
+
+# Now you can install packages without specifying a mirror each time
+install.packages("kableExtra")
+
+library(tidyverse)
+library(kableExtra)
+
+#Loading the Data from Github
+
+ufo_sightings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-06-20/ufo_sightings.csv')
+places <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-06-20/places.csv')
+day_parts_map <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-06-20/day_parts_map.csv')
+
+```
+
+## Metadata for the Table 1 (UFO SIGHTINGS)
+
+```{r Metadata for the Table 1 (UFO Sightings) }
+#| code-fold: true
+
+
+library(tidyverse)
+library(kableExtra)
+
+# Create metadata tibble including sample data
+metadata_ufo <- tibble(
+  Column = names(ufo_sightings),
+  DataType = sapply(ufo_sightings, class),
+  SampleData = sapply(ufo_sightings, function(column) {
+    # Extracting the first non-NA value as sample. You might adjust this logic based on your needs.
+    first_non_na <- column[!is.na(column)][1]
+    if (is.numeric(first_non_na)) {
+      # For numeric data, format to limit the number of decimal places
+      return(format(first_non_na, nsmall = 2))
+    } else {
+      return(as.character(first_non_na))
+    }
+  })
+)
+
+# Display the metadata with sample data using kable and kableExtra
+metadata_ufo %>%
+  kable("html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = F) %>%
+  column_spec(1, bold = T)
+
+```
+
+## Metadata for the Table 2 (PLACES)
+
+```{r}
+#| code-fold: true
+
+
+library(tidyverse)
+library(kableExtra)
+
+# Create metadata tibble including sample data
+metadata_ufo <- tibble(
+  Column = names(places),
+  DataType = sapply(places, class),
+  SampleData = sapply(places, function(column) {
+    # Extracting the first non-NA value as sample. You might adjust this logic based on your needs.
+    first_non_na <- column[!is.na(column)][1]
+    if (is.numeric(first_non_na)) {
+      # For numeric data, format to limit the number of decimal places
+      return(format(first_non_na, nsmall = 2))
+    } else {
+      return(as.character(first_non_na))
+    }
+  })
+)
+
+# Display the metadata with sample data using kable and kableExtra
+metadata_ufo %>%
+  kable("html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = F) %>%
+  column_spec(1, bold = T)
+
+```
+
+## Metadata for the Table 3 (Day_part_map)
+
+```{r}
+#| code-fold: true
+
+
+library(tidyverse)
+library(kableExtra)
+
+# Create metadata tibble including sample data
+metadata_ufo <- tibble(
+  Column = names(day_parts_map),
+  DataType = sapply(day_parts_map, class),
+  SampleData = sapply(day_parts_map, function(column) {
+    # Extracting the first non-NA value as sample.
+    first_non_na <- column[!is.na(column)][1]
+    if (is.numeric(first_non_na)) {
+      # For numeric data, format to limit the number of decimal places
+      return(format(first_non_na, nsmall = 2))
+    } else {
+      return(as.character(first_non_na))
+    }
+  })
+)
+
+# Display the metadata with sample data using kable and kableExtra
+metadata_ufo %>%
+  kable("html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = F) %>%
+  column_spec(1, bold = T)
+
+
+```
+
+## Why did you choose this data-set?
+
+-   There are several reasons why we chose this data-set. The first reason is that the data is well-formatted and is rich in variables, making it interesting for data wrangling and visualizing patterns.
+
+-   The second reason is the social media engagement and interest in this particular phenomenon.
+
+-   Lastly, UFO sightings hold a plethora of significance in scientific research, as humans have been wondering and searching for life outside Earth ever since the first telescope was discovered. In summary, it would be interesting to engage in discussions of mysteries of the cosmos and extraterrestrial life while also contributing to the cause with our visualizations.
+
+## Data Pre-processing
+
+We would need to do some data cleaning and pre-processing to improve the validity of the visualizations.
+
+*ufo_sightings.csv:*
+
+-   Use places where the UFO sightings are more than 200.
+
+-   Group NA, "unknown" and "other" values in the shape column under a single heading.
+
+-   Include only those observations where the duration of UFO sightings are more 5 minutes.
+
+*places.csv:*
+
+-   Remove the negative values from elevation column.
+
+#### Discuss potential biases.
+
+-   It is entirely possible that people in smaller cities with lesser knowledge of modern technology may have seen a plane or helicopter in the sky, and mistook it for a UFO. But at the same time, it is possible that they have seen a UFO and didn’t have the proper methods to report such a sighting.
+
+-   On the other hand, people in larger cities may not be able to clearly view these supposed “UFO sightings” due to air pollution and sky-scrapers being more prevalent in these areas. But contrary to people in smaller cities, they may have the means to report the sightings quickly.
+
+-   We believe that although this would introduce bad data in the data-set, there isn’t a suitable solution to address this issue. But the shapes column in the ufo_sightings data-set can be a good way to filter out the data-sets, regardless of the location of the sightings.
+
+-   Shapes that are more commonly sighted will be more likely to actually be true, versus shapes that have one-off or just a few sightings.
+
+-   For example, the “cube” shape has only been sighted twice, which is improbable that it may be sighted correctly, because otherwise we would have seen more sightings of that shape in our data-set. On the other hand, the circle shape appears to be very likely as it has been sighted over 9000 times.
+
+-   Furthermore, in order to establish a correlation between UFO shapes and locations, we plan to run a chi-squared test that can quantify the strength and significance of these relationships.
+
+## Questions and Analysis plan
+
+**What is the geographic distribution of UFO sightings? Are there any hotspots where the number of sightings is prevalent? Is there any correlation between the location of the sighting and the shape of the UFO?**
+
+-   At the beginning of the project, we will start off by cleaning and wrangling the data. All the data that might not be necessary for our workflow will be removed. We will also be adding and modifying data to the datasets that we have received from the TidyTuesday.
+
+-   Our first step with tackling the first question is to use the cleaned data to plot a heatmap of the world.
+
+-   We will group the data of the countries to find the number of sightings in each of the countries.
+
+-   Then, we will use the `ggmap` package of R to plot a heatmap of the world with this data.
+
+-   From there, we will work on zoning in on the United States. Figuring out those cities where these sightings are prevalent. This will be done using `ggplot’s` geom_point feature, and the longitude and latitude columns. We will paste this plot over a realistic map of the United States, marking the cities where the density of the sightings are more prevalent.
+
+-   Then, we will visualize whether certain areas are more likely to report a certain shape. This will be done with a histogram, comparing the densities of the shapes for the states.
+
+**Q.2) Are there any patterns to the sightings concerning seasons? Do astronomical events affect the reported sightings?**
+
+-   First, we will slice the `reported_date_time_utc` column in the `ufo_sightings`dataset, and separate the dates and times from it.
+
+-   Then we will clean data to handle all the various time zones and merge them accurately, which we have explained below.
+
+-   Alongside this, we will work on grouping the dates, by their seasons (i.e. spring, summer, fall, winter)
+
+-   Using this data, we will plot a line chart to visualize the time series analysis of the seasonal data.
+
+-   For the plot to visualize whether astronomical events affect the sightings, we are going to be using a sunburst plot, which will be a part of the `sunburstR` package.
+
+*Parameters used*
+
+-   `ufo_sightings`
+    -   `reported_date_time_utc`
+    -   `city`
+    -   `state`
+    -   `country_code`
+    -   `shape`
+-   `places`
+    -   `latitude`
+    -   `longitude`
+    -   `population`
+    -   `elevation`
+    -   `state`
+    -   `timezone`
+-   `day_parts_map`
+    -   All columns other than `rounded_lat` and `rounded_long`
+
+## TIMELINE
+
+-   Week-1
+
+Data Loading and Exploration - Load the data-set. Explore the structure and contents of each CSV file and identify any potential issues or inconsistencies in the data.
+
+Data Pre-processing - Cleaning of ufo_sightings.csv and places.csv data-set Filtering out observations and remove NA values from the shape and day_part columns.
+
+Time Zone Alignment- Develop a methodology for aligning sighting times with sunrise and sunset data. Executing the alignment procedure, making sure that time zone modifications are made accurately. Cross-reference the alignment with the times of known sunrise and sunset for particular areas to confirm it.
+
+-   Week-2
+
+Geographic Distribution Analysis - Plot sightings on a map using ggplot2. The cleaned data-sets will be used to visualize the geographic distribution of UFO sightings. We’ll identify hot-spots where sightings are prevalent and explore any correlations between sighting locations and UFO shapes. Seasonal Patterns Analysis - A time series plot can be created to visualize patterns in sightings over different seasons( winter, spring, summer, and fall) and will also investigate the impact of astronomical events on reported sightings.
+
+-   Week-3
+
+Final Analysis and Reporting.- Summarizing key findings from the geographic distribution and seasonal patterns analysis. Discuss any correlations observed. Prepare the visualizations and insights for presentation.
+
+Review - Review the analysis for accuracy and completeness, making any necessary revisions. Finalize the proposal and preparing for presentation
+
+On March 11 the Project will be ready for presentation.

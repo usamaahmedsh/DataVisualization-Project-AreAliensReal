@@ -1,0 +1,26 @@
+project:
+  type: website
+
+website:
+   title: "<img src='/images/Logo1.png' alt='Stock Symbol' style='width: 2.6em; height: 2.2em; border-radius: 30%; margin-right: 10px;'><b>UFO SIGHTINGS</b>"
+   navbar:
+    right:
+      - icon: github
+        href: https://github.com/INFO-526-S24/project-01-fight-club
+    left:
+      - text: Home Page
+        href: index.qmd
+      - text: Proposal
+        href: proposal.qmd
+      - text: Presentation
+        href: presentation.qmd
+      - text: About
+        href: about.qmd
+
+format:
+  html:
+    theme: [simple,data/customtheming.scss]
+    toc: true
+
+execute:
+  freeze: auto

@@ -1,0 +1,365 @@
+---
+title: "Unveiling the Mystery: Exploring Patterns and Associations in UFO Sightings Data"
+
+subtitle: "INFO 526 - Spring 2024 - Project 1"
+author: "Fight Club"
+title-slide-attributes:
+  data-background-image: images/ufo.jpg
+  data-background-size: stretch
+  data-background-opacity: "0.8"
+  data-slide-number: none
+format:
+  revealjs:
+    theme:  ['data/customtheming.scss']
+    transition: slide
+    background-transition: zoom
+  
+editor: visual
+execute:
+  echo: false
+---
+
+```{r}
+#| label: load-packages
+#| include: false
+
+# Load packages here
+pacman::p_load(tidymodels,
+               tidyverse,
+               gganimate,
+               dplyr,
+               kableExtra,
+               sf, 
+               leaflet, 
+               ggmap,
+               maps,
+               lubridate,
+               data.table,
+               gganimate,
+               ggimage,
+               png,
+               here,
+               grid,
+               plotly)
+```
+
+```{r}
+#| label: setup
+#| include: false
+
+# Plot theme
+ggplot2::theme_set(ggplot2::theme_minimal(base_size = 11))
+
+# For better figure resolution
+knitr::opts_chunk$set(
+  fig.retina = 3, 
+  dpi = 300, 
+  fig.width = 6, 
+  fig.asp = 0.618 
+  )
+```
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+#| label: load-data
+#| include: false
+
+
+ufo_sightings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-06-20/ufo_sightings.csv')
+places <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-06-20/places.csv')
+day_parts_map <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-06-20/day_parts_map.csv')
+
+```
+
+## Data Set
+
+The data-set records 80,000 observations and is extracted from Tidy Tuesday.
+
+<https://github.com/rfordatascience/tidytuesday/blob/master/data/2023/2023-06-20/readme.md>
+
+The three data-sets are as follows :
+
+-   **ufo_sightings.csv**
+
+-   **places.csv**
+
+-   **days_parts_map**
+
+## Question - 1
+
+What is the geographic distribution of UFO sightings? Are there any hotspots where the number of sightings is prevalent? Is there any correlation between the location of the sighting and the shape of the UFO?
+
+## Heat-map Distribution of UFO Sightings
+
+```{r}
+#| warning: FALSE
+#| echo: FALSE
+#| output: FALSE
+
+
+places_location_data <- places |>
+  select(state, country, latitude, longitude) 
+
+places_location_data <- places_location_data %>%
+  group_by(country) %>%
+  summarise(sighting_count = n()) %>%
+  ungroup()
+```
+
+```{r}
+
+#| warning: FALSE
+#| echo: FALSE
+#| output: FALSE
+
+
+world_map <- map_data("world")
+colnames(world_map)[5] <- "country"
+```
+
+```{r}
+
+#| warning: FALSE
+#| echo: FALSE
+#| output: FALSE
+
+
+places_location_data$country <- tolower(places_location_data$country)
+world_map$country <- tolower(world_map$country)
+```
+
+```{r}
+#| warning: FALSE
+#| echo: FALSE
+#| output: FALSE
+
+
+heatmap_data <- left_join(world_map, places_location_data, by = "country")
+
+setDT(heatmap_data)
+
+heatmap_data[is.na(sighting_count), sighting_count := 0]
+
+heatmap_data[, sighting_count_range := case_when(sighting_count == 0 ~ "<1",
+                                                 sighting_count < 30 ~ "1-29",
+                                                 sighting_count < 60 ~ "30-59",
+                                                 sighting_count < 150 ~ "60-149",
+                                                 sighting_count < 200 ~ "150-299",
+                                                 sighting_count < 1000 ~ "300-999",
+                                                 sighting_count > 1000 ~ "1000+",
+                                                 TRUE ~ "-1")]
+heatmap_data$sighting_count_range <- factor(heatmap_data$sighting_count_range,
+                                            levels = c("<1","1-29","30-59","60-149","150-299","300-999","1000+"))
+
+```
+
+```{r, fig.width=20, fig.asp=0.7,fig.align='center'}
+color_scale_values = c("<1" = "#D8FAFD", 
+                       "1-29" = "#8FFAFD", 
+                       "30-59" = "#0CFDF3", 
+                       "60-149" = "#3282F6", 
+                       "150-299" = "#0023F5", 
+                       "300-999" = "#00129A", 
+                       "1000+" = "#000C7B")
+
+ggplot() + 
+  geom_polygon(data = world_map, aes(x = long, y = lat, group = group), fill = "white", color = "black") +
+  geom_polygon(data = heatmap_data, aes(x = long, y = lat, group = group, fill = sighting_count_range), color = "black") +
+  theme_minimal() +
+  scale_fill_manual(values =  color_scale_values) +
+  coord_fixed(1.3)+
+  xlab("Longitude") +
+  ylab("Latitude") +
+  labs(fill = "Number of sightings by country")
+```
+
+## UFO Sighting Distribution in the US
+
+```{r}
+us_places_data <- places |>
+  select(state, country, country_code, latitude, longitude)
+us_places_data <- us_places_data |>
+  filter(!is.na(latitude) & !is.na(longitude))
+us_places_data <- us_places_data |>
+  filter(country_code == "US")
+```
+
+```{r, fig.align='center'}
+map_plot <- leaflet(data = us_places_data) |>
+  addTiles() |>
+  setView(
+    lng = -100,    # Adjusted center longitude for the entire US
+    lat = 37,      # Adjusted center latitude for the entire US
+    zoom = 3       # Adjusted zoom level
+  )
+
+
+map_plot <- map_plot |>
+  addCircleMarkers(lat = ~latitude, lng = ~longitude, color = "#51EE00", stroke = FALSE, fillOpacity = 0.8)
+
+map_plot
+```
+
+## Variance of Shape Sightings
+
+```{r,echo=FALSE , fig.width=13,fig.height=9,fig.align='center', warning=FALSE}
+shapes_filtered <- ufo_sightings |>
+  select(city, state, country_code, shape) |>
+  filter(shape != "other" & shape != "unknown")
+
+
+shapes_filtered <- shapes_filtered |>
+  group_by(shape) |>
+  filter(dplyr::n() > 1500) |>
+  ungroup()
+
+shape_counts <- shapes_filtered |>
+  count(shape)
+
+ggplot(shape_counts, aes(x = n, y = shape)) +
+  geom_bar(stat = "identity", fill=alpha("#0023F5", 0.5)) +
+  xlim(-2000, 19000) +
+  coord_polar(theta = "y") +
+  theme_minimal() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.title.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.text.x = element_text(size = 15))
+```
+
+![](images/shape2.png)
+
+## Question - 2
+
+\
+Are there any patterns to the sightings concerning seasons? Do astronomical events affect the reported sightings?
+
+## UFO Sightings By Season For Each Decade
+
+```{r, dev='ragg_png', fig.width=10,fig.height=6.5,fig.align='center', warning = FALSE, message=FALSE}
+
+# Time-series plot by season (Usama)
+
+ufo_sightings <- left_join(ufo_sightings, places, by = c("city", 
+                                                         "state",
+                                                         "country_code"))
+
+ufo_sightings <- ufo_sightings |> 
+  filter(!is.na(shape) & shape != "other" & shape != "unknown")
+
+ufo_sightings$decade <- as.integer(format(ufo_sightings$reported_date_time_utc, "%Y")) - as.integer(format(ufo_sightings$reported_date_time_utc, "%Y")) %% 10
+
+ufo_sightings$reported_date <- as.Date(ufo_sightings$reported_date_time, format="%Y-%m-%dT%H:%M:%SZ")
+
+get_season <- function(date) {
+  year <- format(date, "%Y")
+  start_spring <- as.Date(paste(year, "-03-21", sep=""))
+  start_summer <- as.Date(paste(year, "-06-21", sep=""))
+  start_autumn <- as.Date(paste(year, "-09-23", sep=""))
+  start_winter <- as.Date(paste(year, "-12-21", sep=""))
+  
+  if (date >= start_spring & date < start_summer) {
+    return('spring')
+  } else if (date >= start_summer & date < start_autumn) {
+    return('summer')
+  } else if (date >= start_autumn & date < start_winter) {
+    return('autumn')
+  } else {
+    return('winter')
+  }
+}
+
+ufo_sightings$season <- sapply(ufo_sightings$reported_date, get_season)
+
+ufo_sightings$season_emoji <- case_when(
+      ufo_sightings$season == "winter" ~ "❄️",
+      ufo_sightings$season == "spring" ~ "⛅️️",
+      ufo_sightings$season == "summer" ~ "☀️",
+      ufo_sightings$season == "autumn"   ~ "☂️",
+      TRUE ~ "Null")
+
+grouped_data <- ufo_sightings |>
+  group_by(decade,season,season_emoji) |>
+  summarise(sightings = n())
+
+image <- readPNG(here("images","ufo_background_image.png"))
+
+
+ggplot(grouped_data, aes(x=decade, y=sightings, color=season)) +
+  annotation_custom(rasterGrob(image),
+                    xmin=-Inf,
+                    xmax=Inf,
+                    ymin=-Inf,
+                    ymax=Inf) +
+  geom_line(linewidth = 0.8) +
+  geom_text(aes(label = season_emoji)) +
+  scale_y_continuous(breaks = seq(0,14000,2000)) +
+  scale_x_continuous(breaks = seq(1920,2020,10)) +
+  theme_minimal() +
+  labs(title="UFO sightings by season over years",
+       x="Decade",
+       y="Number of Sightings",
+       subtitle = "Sightings by each decade from 1920 till 2020",
+       color = "Season") +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        plot.title.position = "plot",
+        legend.position = "none",
+        panel.grid.minor.y = element_blank(),
+        panel.grid.major.y = element_line(color = "black",
+                                          linewidth = 0.5,
+                                          linetype = "dotted"),
+        panel.background = element_blank(), 
+        panel.ontop = TRUE) 
+
+```
+
+## UFO Sightings by Part of Day
+
+```{r,  fig.width=10,fig.height=6.5,fig.align='center'}
+
+# Ufo sightings by part of the day (Naitik)
+
+setDT(ufo_sightings)
+df <- ufo_sightings[, .(sightings = .N), day_part]
+View(df)
+
+df <- na.omit(df)
+
+df$day_part <- gsub("night","Night",df$day_part)
+df$day_part <- gsub("nautical dusk","Nautical Dusk",df$day_part)
+df$day_part <- gsub("afternoon","Afternoon",df$day_part)
+df$day_part <- gsub("morning","Morning",df$day_part)
+df$day_part <- gsub("astronomical dusk","Astronomical Dusk",df$day_part)
+df$day_part <- gsub("civil dusk","Civil Dusk",df$day_part)
+df$day_part <- gsub("civil dawn","Civil Dawn",df$day_part)
+df$day_part <- gsub("nautical dawn","Nautical Dawn",df$day_part)
+df$day_part <- gsub("astronomical dawn","Astronomical Dawn",df$day_part)
+
+
+ggplot(df, aes(x=reorder(day_part, sightings), y=sightings, fill=day_part)) +
+  geom_bar(stat="identity") +
+  coord_flip() +
+  labs(title="UFO Sightings by Part of the Day",
+       x="Part of the Day",
+       y="Number of Sightings") +
+  theme_minimal() +
+  theme(legend.position="none",
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank(),
+    )
+
+
+
+
+```
+
+## Wrap Up
+
+To conclude,
+
+While we can’t definitively say whether UFO sightings are real or not, there are more than enough claims to argue that there is a possibility extraterrestrial life exists and that we may have encountered them in the past.
+
+## Questions Are Welcomed 🛸
+
+![](images/Thanks.gif)

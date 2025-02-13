@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>UFO SIGHTINGS - Unveiling the Mystery: Exploring Patterns and Associations in UFO Sightings Data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title"><img src="./images/Logo1.png" alt="Stock Symbol" style="width: 2.6em; height: 2.2em; border-radius: 30%; margin-right: 10px;"><b>UFO SIGHTINGS</b></span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html" rel="" target="">
+ <span class="menu-text">Home Page</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./proposal.html" rel="" target="" aria-current="page">
+ <span class="menu-text">Proposal</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./presentation.html" rel="" target="">
+ <span class="menu-text">Presentation</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/INFO-526-S24/project-01-fight-club" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#dataset" id="toc-dataset" class="nav-link" data-scroll-target="#dataset">Dataset</a></li>
+  <li><a href="#metadata-for-the-table-1-ufo-sightings" id="toc-metadata-for-the-table-1-ufo-sightings" class="nav-link" data-scroll-target="#metadata-for-the-table-1-ufo-sightings">Metadata for the Table 1 (UFO SIGHTINGS)</a></li>
+  <li><a href="#metadata-for-the-table-2-places" id="toc-metadata-for-the-table-2-places" class="nav-link" data-scroll-target="#metadata-for-the-table-2-places">Metadata for the Table 2 (PLACES)</a></li>
+  <li><a href="#metadata-for-the-table-3-day_part_map" id="toc-metadata-for-the-table-3-day_part_map" class="nav-link" data-scroll-target="#metadata-for-the-table-3-day_part_map">Metadata for the Table 3 (Day_part_map)</a></li>
+  <li><a href="#why-did-you-choose-this-data-set" id="toc-why-did-you-choose-this-data-set" class="nav-link" data-scroll-target="#why-did-you-choose-this-data-set">Why did you choose this data-set?</a></li>
+  <li><a href="#data-pre-processing" id="toc-data-pre-processing" class="nav-link" data-scroll-target="#data-pre-processing">Data Pre-processing</a></li>
+  <li><a href="#questions-and-analysis-plan" id="toc-questions-and-analysis-plan" class="nav-link" data-scroll-target="#questions-and-analysis-plan">Questions and Analysis plan</a></li>
+  <li><a href="#timeline" id="toc-timeline" class="nav-link" data-scroll-target="#timeline">TIMELINE</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Unveiling the Mystery: Exploring Patterns and Associations in UFO Sightings Data</h1>
+<p class="subtitle lead">Proposal</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p><strong>Description of the dataset</strong></p>
+<p>The UFO Sightings Redux data comes from the National UFO Reporting Center, cleaned and enriched with data from sunrise-sunset.org by Jon Harmo.</p>
+<p>The collection of verified UFO sightings from multiple sources is compiled into a comprehensive list called TidyTuesday UFO sightings. The location (latitude and longitude), the time and date of the sighting, the shape of the purported UFO, the duration of the sighting, and any other comments or descriptions provided by witnesses are typically included in this data-set.</p>
+<p>There are 3 CSV files in the data-set:</p>
+<ul>
+<li><p><code>ufo_sightings.csv</code>: It has 12 variables such as city, state, country_code, and shape. In total 96,429 rows.</p></li>
+<li><p><code>places.csv</code>: It has 10 variables such as longitude, latitude and time zone, country_code, and alternate_city_names. There are 14,417 rows.</p></li>
+<li><p><code>day_parts_map.csv</code>: It has 12 variables such as sunrise, sunset, civil_twilight_end, nautical_twilight_end, and astronomical_twilight_end. It’s of 26,409 rows.</p></li>
+</ul>
+</section>
+<section id="dataset" class="level2">
+<h2 class="anchored" data-anchor-id="dataset">Dataset</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the Data</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Reading the data manually</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">repos =</span> <span class="fu">c</span>(<span class="at">CRAN =</span> <span class="st">"https://cloud.r-project.org/"</span>))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Now you can install packages without specifying a mirror each time</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"kableExtra"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#Loading the Data from Github</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>ufo_sightings <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-06-20/ufo_sightings.csv'</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>places <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-06-20/places.csv'</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>day_parts_map <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-06-20/day_parts_map.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="metadata-for-the-table-1-ufo-sightings" class="level2">
+<h2 class="anchored" data-anchor-id="metadata-for-the-table-1-ufo-sightings">Metadata for the Table 1 (UFO SIGHTINGS)</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create metadata tibble including sample data</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>metadata_ufo <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Column =</span> <span class="fu">names</span>(ufo_sightings),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">DataType =</span> <span class="fu">sapply</span>(ufo_sightings, class),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">SampleData =</span> <span class="fu">sapply</span>(ufo_sightings, <span class="cf">function</span>(column) {</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extracting the first non-NA value as sample. You might adjust this logic based on your needs.</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    first_non_na <span class="ot">&lt;-</span> column[<span class="sc">!</span><span class="fu">is.na</span>(column)][<span class="dv">1</span>]</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.numeric</span>(first_non_na)) {</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>      <span class="co"># For numeric data, format to limit the number of decimal places</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(<span class="fu">format</span>(first_non_na, <span class="at">nsmall =</span> <span class="dv">2</span>))</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(<span class="fu">as.character</span>(first_non_na))</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the metadata with sample data using kable and kableExtra</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>metadata_ufo <span class="sc">%&gt;%</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="st">"html"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>), <span class="at">full_width =</span> F) <span class="sc">%&gt;%</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_spec</span>(<span class="dv">1</span>, <span class="at">bold =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Column</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">DataType</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">SampleData</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">reported_date_time</td>
+<td style="text-align: left;">POSIXct, POSIXt</td>
+<td style="text-align: left;">2022-08-29 06:03:00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">reported_date_time_utc</td>
+<td style="text-align: left;">POSIXct, POSIXt</td>
+<td style="text-align: left;">2022-08-29 06:03:00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">posted_date</td>
+<td style="text-align: left;">Date</td>
+<td style="text-align: left;">2022-09-09</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">city</td>
+<td style="text-align: left;">character</td>
+<td style="text-align: left;">Pinehurst</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">state</td>
+<td style="text-align: left;">character</td>
+<td style="text-align: left;">NC</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">country_code</td>
+<td style="text-align: left;">character</td>
+<td style="text-align: left;">US</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">shape</td>
+<td style="text-align: left;">character</td>
+<td style="text-align: left;">changing</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">reported_duration</td>
+<td style="text-align: left;">character</td>
+<td style="text-align: left;">15 mins…</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">duration_seconds</td>
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">900.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">summary</td>
+<td style="text-align: left;">character</td>
+<td style="text-align: left;">Saw multi color object above horizon.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">has_images</td>
+<td style="text-align: left;">logical</td>
+<td style="text-align: left;">FALSE</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">day_part</td>
+<td style="text-align: left;">character</td>
+<td style="text-align: left;">night</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</section>
+<section id="metadata-for-the-table-2-places" class="level2">
+<h2 class="anchored" data-anchor-id="metadata-for-the-table-2-places">Metadata for the Table 2 (PLACES)</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create metadata tibble including sample data</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>metadata_ufo <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Column =</span> <span class="fu">names</span>(places),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">DataType =</span> <span class="fu">sapply</span>(places, class),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">SampleData =</span> <span class="fu">sapply</span>(places, <span class="cf">function</span>(column) {</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extracting the first non-NA value as sample. You might adjust this logic based on your needs.</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    first_non_na <span class="ot">&lt;-</span> column[<span class="sc">!</span><span class="fu">is.na</span>(column)][<span class="dv">1</span>]</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.numeric</span>(first_non_na)) {</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>      <span class="co"># For numeric data, format to limit the number of decimal places</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(<span class="fu">format</span>(first_non_na, <span class="at">nsmall =</span> <span class="dv">2</span>))</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(<span class="fu">as.character</span>(first_non_na))</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the metadata with sample data using kable and kableExtra</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>metadata_ufo <span class="sc">%&gt;%</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="st">"html"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>), <span class="at">full_width =</span> F) <span class="sc">%&gt;%</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_spec</span>(<span class="dv">1</span>, <span class="at">bold =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Column</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">DataType</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">SampleData</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">city</td>
+<td style="text-align: left;">character</td>
+<td style="text-align: left;">Pinehurst</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">alternate_city_names</td>
+<td style="text-align: left;">character</td>
+<td style="text-align: left;">Pajnkherst,bynhwrst,pynhwrst karwlynay shmaly,Пајнхерст,بينهورست,پینهورست، کارولینای شمالی</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">state</td>
+<td style="text-align: left;">character</td>
+<td style="text-align: left;">NC</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">country</td>
+<td style="text-align: left;">character</td>
+<td style="text-align: left;">USA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">country_code</td>
+<td style="text-align: left;">character</td>
+<td style="text-align: left;">US</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">latitude</td>
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">35.19543</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">longitude</td>
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">-79.46948</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">timezone</td>
+<td style="text-align: left;">character</td>
+<td style="text-align: left;">America/New_York</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">population</td>
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">15752.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">elevation_m</td>
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">160.00</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</section>
+<section id="metadata-for-the-table-3-day_part_map" class="level2">
+<h2 class="anchored" data-anchor-id="metadata-for-the-table-3-day_part_map">Metadata for the Table 3 (Day_part_map)</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create metadata tibble including sample data</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>metadata_ufo <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Column =</span> <span class="fu">names</span>(day_parts_map),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">DataType =</span> <span class="fu">sapply</span>(day_parts_map, class),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">SampleData =</span> <span class="fu">sapply</span>(day_parts_map, <span class="cf">function</span>(column) {</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extracting the first non-NA value as sample.</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    first_non_na <span class="ot">&lt;-</span> column[<span class="sc">!</span><span class="fu">is.na</span>(column)][<span class="dv">1</span>]</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.numeric</span>(first_non_na)) {</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>      <span class="co"># For numeric data, format to limit the number of decimal places</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(<span class="fu">format</span>(first_non_na, <span class="at">nsmall =</span> <span class="dv">2</span>))</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(<span class="fu">as.character</span>(first_non_na))</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the metadata with sample data using kable and kableExtra</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>metadata_ufo <span class="sc">%&gt;%</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="st">"html"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>), <span class="at">full_width =</span> F) <span class="sc">%&gt;%</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_spec</span>(<span class="dv">1</span>, <span class="at">bold =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Column</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">DataType</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">SampleData</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">rounded_lat</td>
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">40.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">rounded_long</td>
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">-80.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">rounded_date</td>
+<td style="text-align: left;">Date</td>
+<td style="text-align: left;">2022-08-28</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">astronomical_twilight_begin</td>
+<td style="text-align: left;">hms , difftime</td>
+<td style="text-align: left;">09:07:43</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">nautical_twilight_begin</td>
+<td style="text-align: left;">hms , difftime</td>
+<td style="text-align: left;">09:42:49</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">civil_twilight_begin</td>
+<td style="text-align: left;">hms , difftime</td>
+<td style="text-align: left;">10:16:18</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">sunrise</td>
+<td style="text-align: left;">hms , difftime</td>
+<td style="text-align: left;">10:42:53</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">solar_noon</td>
+<td style="text-align: left;">hms , difftime</td>
+<td style="text-align: left;">17:21:10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">sunset</td>
+<td style="text-align: left;">hms , difftime</td>
+<td style="text-align: left;">23:59:27</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">civil_twilight_end</td>
+<td style="text-align: left;">hms , difftime</td>
+<td style="text-align: left;">00:26:02</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">nautical_twilight_end</td>
+<td style="text-align: left;">hms , difftime</td>
+<td style="text-align: left;">00:59:31</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">astronomical_twilight_end</td>
+<td style="text-align: left;">hms , difftime</td>
+<td style="text-align: left;">01:34:37</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</section>
+<section id="why-did-you-choose-this-data-set" class="level2">
+<h2 class="anchored" data-anchor-id="why-did-you-choose-this-data-set">Why did you choose this data-set?</h2>
+<ul>
+<li><p>There are several reasons why we chose this data-set. The first reason is that the data is well-formatted and is rich in variables, making it interesting for data wrangling and visualizing patterns.</p></li>
+<li><p>The second reason is the social media engagement and interest in this particular phenomenon.</p></li>
+<li><p>Lastly, UFO sightings hold a plethora of significance in scientific research, as humans have been wondering and searching for life outside Earth ever since the first telescope was discovered. In summary, it would be interesting to engage in discussions of mysteries of the cosmos and extraterrestrial life while also contributing to the cause with our visualizations.</p></li>
+</ul>
+</section>
+<section id="data-pre-processing" class="level2">
+<h2 class="anchored" data-anchor-id="data-pre-processing">Data Pre-processing</h2>
+<p>We would need to do some data cleaning and pre-processing to improve the validity of the visualizations.</p>
+<p><em>ufo_sightings.csv:</em></p>
+<ul>
+<li><p>Use places where the UFO sightings are more than 200.</p></li>
+<li><p>Group NA, “unknown” and “other” values in the shape column under a single heading.</p></li>
+<li><p>Include only those observations where the duration of UFO sightings are more 5 minutes.</p></li>
+</ul>
+<p><em>places.csv:</em></p>
+<ul>
+<li>Remove the negative values from elevation column.</li>
+</ul>
+<section id="discuss-potential-biases." class="level4">
+<h4 class="anchored" data-anchor-id="discuss-potential-biases.">Discuss potential biases.</h4>
+<ul>
+<li><p>It is entirely possible that people in smaller cities with lesser knowledge of modern technology may have seen a plane or helicopter in the sky, and mistook it for a UFO. But at the same time, it is possible that they have seen a UFO and didn’t have the proper methods to report such a sighting.</p></li>
+<li><p>On the other hand, people in larger cities may not be able to clearly view these supposed “UFO sightings” due to air pollution and sky-scrapers being more prevalent in these areas. But contrary to people in smaller cities, they may have the means to report the sightings quickly.</p></li>
+<li><p>We believe that although this would introduce bad data in the data-set, there isn’t a suitable solution to address this issue. But the shapes column in the ufo_sightings data-set can be a good way to filter out the data-sets, regardless of the location of the sightings.</p></li>
+<li><p>Shapes that are more commonly sighted will be more likely to actually be true, versus shapes that have one-off or just a few sightings.</p></li>
+<li><p>For example, the “cube” shape has only been sighted twice, which is improbable that it may be sighted correctly, because otherwise we would have seen more sightings of that shape in our data-set. On the other hand, the circle shape appears to be very likely as it has been sighted over 9000 times.</p></li>
+<li><p>Furthermore, in order to establish a correlation between UFO shapes and locations, we plan to run a chi-squared test that can quantify the strength and significance of these relationships.</p></li>
+</ul>
+</section>
+</section>
+<section id="questions-and-analysis-plan" class="level2">
+<h2 class="anchored" data-anchor-id="questions-and-analysis-plan">Questions and Analysis plan</h2>
+<p><strong>What is the geographic distribution of UFO sightings? Are there any hotspots where the number of sightings is prevalent? Is there any correlation between the location of the sighting and the shape of the UFO?</strong></p>
+<ul>
+<li><p>At the beginning of the project, we will start off by cleaning and wrangling the data. All the data that might not be necessary for our workflow will be removed. We will also be adding and modifying data to the datasets that we have received from the TidyTuesday.</p></li>
+<li><p>Our first step with tackling the first question is to use the cleaned data to plot a heatmap of the world.</p></li>
+<li><p>We will group the data of the countries to find the number of sightings in each of the countries.</p></li>
+<li><p>Then, we will use the <code>ggmap</code> package of R to plot a heatmap of the world with this data.</p></li>
+<li><p>From there, we will work on zoning in on the United States. Figuring out those cities where these sightings are prevalent. This will be done using <code>ggplot’s</code> geom_point feature, and the longitude and latitude columns. We will paste this plot over a realistic map of the United States, marking the cities where the density of the sightings are more prevalent.</p></li>
+<li><p>Then, we will visualize whether certain areas are more likely to report a certain shape. This will be done with a histogram, comparing the densities of the shapes for the states.</p></li>
+</ul>
+<p><strong>Q.2) Are there any patterns to the sightings concerning seasons? Do astronomical events affect the reported sightings?</strong></p>
+<ul>
+<li><p>First, we will slice the <code>reported_date_time_utc</code> column in the <code>ufo_sightings</code>dataset, and separate the dates and times from it.</p></li>
+<li><p>Then we will clean data to handle all the various time zones and merge them accurately, which we have explained below.</p></li>
+<li><p>Alongside this, we will work on grouping the dates, by their seasons (i.e.&nbsp;spring, summer, fall, winter)</p></li>
+<li><p>Using this data, we will plot a line chart to visualize the time series analysis of the seasonal data.</p></li>
+<li><p>For the plot to visualize whether astronomical events affect the sightings, we are going to be using a sunburst plot, which will be a part of the <code>sunburstR</code> package.</p></li>
+</ul>
+<p><em>Parameters used</em></p>
+<ul>
+<li><code>ufo_sightings</code>
+<ul>
+<li><code>reported_date_time_utc</code></li>
+<li><code>city</code></li>
+<li><code>state</code></li>
+<li><code>country_code</code></li>
+<li><code>shape</code></li>
+</ul></li>
+<li><code>places</code>
+<ul>
+<li><code>latitude</code></li>
+<li><code>longitude</code></li>
+<li><code>population</code></li>
+<li><code>elevation</code></li>
+<li><code>state</code></li>
+<li><code>timezone</code></li>
+</ul></li>
+<li><code>day_parts_map</code>
+<ul>
+<li>All columns other than <code>rounded_lat</code> and <code>rounded_long</code></li>
+</ul></li>
+</ul>
+</section>
+<section id="timeline" class="level2">
+<h2 class="anchored" data-anchor-id="timeline">TIMELINE</h2>
+<ul>
+<li>Week-1</li>
+</ul>
+<p>Data Loading and Exploration - Load the data-set. Explore the structure and contents of each CSV file and identify any potential issues or inconsistencies in the data.</p>
+<p>Data Pre-processing - Cleaning of ufo_sightings.csv and places.csv data-set Filtering out observations and remove NA values from the shape and day_part columns.</p>
+<p>Time Zone Alignment- Develop a methodology for aligning sighting times with sunrise and sunset data. Executing the alignment procedure, making sure that time zone modifications are made accurately. Cross-reference the alignment with the times of known sunrise and sunset for particular areas to confirm it.</p>
+<ul>
+<li>Week-2</li>
+</ul>
+<p>Geographic Distribution Analysis - Plot sightings on a map using ggplot2. The cleaned data-sets will be used to visualize the geographic distribution of UFO sightings. We’ll identify hot-spots where sightings are prevalent and explore any correlations between sighting locations and UFO shapes. Seasonal Patterns Analysis - A time series plot can be created to visualize patterns in sightings over different seasons( winter, spring, summer, and fall) and will also investigate the impact of astronomical events on reported sightings.</p>
+<ul>
+<li>Week-3</li>
+</ul>
+<p>Final Analysis and Reporting.- Summarizing key findings from the geographic distribution and seasonal patterns analysis. Discuss any correlations observed. Prepare the visualizations and insights for presentation.</p>
+<p>Review - Review the analysis for accuracy and completeness, making any necessary revisions. Finalize the proposal and preparing for presentation</p>
+<p>On March 11 the Project will be ready for presentation.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

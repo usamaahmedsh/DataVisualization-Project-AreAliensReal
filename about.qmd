@@ -1,0 +1,19 @@
+---
+title: "About"
+format: html
+editor: visual
+---
+
+This project was developed by **Fight Club** For [INFO 526 - Data Analysis and Visualization](https://datavizaz.org/) at the University of Arizona, taught by Dr. Greg Chism. The team is comprised of the following team members.
+
+-   Team member 1: Naitik Shah pursuing MS INFORMATION SCIENCE (1st year).
+
+-   Team member 2: Agastya Deshraju pursuing MS DATA SCIENCE (1st year).
+
+-   Team member 3: Usama Ahmed pursuing MS DATA SCIENCE (1st year).
+
+-   Team member 4: Gorantla Sai Laasya pursuing MS INFORMATION SCIENCE (1st year).
+
+-   Team member 5: Lakshmi Neharika Anchula pursuing MS DATA SCIENCE (1st year).
+
+-   Team member 6: Divya Liladhar Dhole pursuing MS DATA SCIENCE (1st year).
